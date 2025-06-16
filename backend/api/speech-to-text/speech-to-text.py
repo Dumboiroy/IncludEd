@@ -8,6 +8,7 @@ import argparse
 import queue
 import sys
 import sounddevice as sd
+import json
 
 from vosk import Model, KaldiRecognizer
 
@@ -71,14 +72,15 @@ try:
         print("#" * 80)
         print("Press Ctrl+C to stop the recording")
         print("#" * 80)
+        print(json.dumps({"text": "Ready for transcription"}), flush=True)
 
         rec = KaldiRecognizer(model, args.samplerate)
         while True:
             data = q.get()
             if rec.AcceptWaveform(data):
-                print(rec.Result())
+                print(json.dumps(json.loads(rec.Result())), flush=True)
             else:
-                print(rec.PartialResult())
+                print(json.dumps(json.loads(rec.PartialResult())), flush=True)
             if dump_fn is not None:
                 dump_fn.write(data)
 

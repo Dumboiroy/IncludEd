@@ -113,7 +113,7 @@ ipcMain.on('start-transcription', (event, args) => {
 	)
 
 	// Build args, e.g. language model or device id, if any
-	const pyArgs = ['-m', 'en-us'] // add any other args you want
+	const pyArgs = ['-m', 'en-us']
 
 	const isWindows = process.platform === 'win32'
 	const pythonPath = path.join(
