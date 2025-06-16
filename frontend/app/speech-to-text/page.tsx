@@ -1,22 +1,37 @@
 'use client'
 import { useEffect, useState } from 'react'
+import styles from './page.module.css'
 
 export default function Page() {
-	const [transcript, setTranscript] = useState('')
+	const [finalTranscript, setFinalTranscript] = useState('')
+	const [liveCaption, setLiveCaption] = useState('')
 
 	useEffect(() => {
 		window.BloopAPI.onTranscriptionResult(data => {
-			const newText = data.text || data.partial || ''
-			setTranscript(prev => prev + '\n' + newText)
+			if (data.text) {
+				// Final result — append it
+				setFinalTranscript(prev => (prev + ' ' + data.text).trim())
+				setLiveCaption('') // Clear caption
+			} else if (data.partial) {
+				// Update live caption
+				setLiveCaption(data.partial)
+			}
 		})
 	}, [])
 
 	return (
-		<main>
-			<button onClick={() => window.BloopAPI.startTranscription()}>
+		<main className={styles.container}>
+			<button
+				onClick={() => window.BloopAPI.startTranscription()}
+				className={styles.button}
+			>
 				Start Transcription
 			</button>
-			<pre>{transcript}</pre>
+
+			<div className={styles.captionContainer}>
+				<p className={styles.liveCaption}>{liveCaption}</p>
+				<p className={styles.finalTranscript}>{finalTranscript}</p>
+			</div>
 		</main>
 	)
 }
