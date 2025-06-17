@@ -1,3 +1,13 @@
 # Speech-to-text library
 vosk
 sounddevice
+
+# tts library
+huggingface_hub
+loguru
+misaki[en]>=0.9.4
+numpy
+torch
+transformers
+soundfile
+kokoro

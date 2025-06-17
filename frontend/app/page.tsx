@@ -20,7 +20,7 @@ export default function Home() {
 					</div>
 					{/* CHANGE THIS WHEN IMPLEMENTED */}
 					<div className={styles.button}>
-						<Link href="/">
+						<Link href="/text-to-speech">
 							<text className={styles.buttonText}>Text to Speech</text>
 						</Link>
 					</div>
@@ -30,6 +30,7 @@ export default function Home() {
 						</Link>
 					</div>
 				</div>
+
 				<footer className={styles.footer}>
 					<h4 className={styles.normalText}>
 						Inclusive and Accessible Education
