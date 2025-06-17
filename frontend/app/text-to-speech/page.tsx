@@ -58,14 +58,20 @@ export default function TextToSpeechPage() {
 				value={voice}
 				onChange={e => setVoice(e.target.value)}
 			>
-				<option value="af_heart">af_heart</option>
+				<option className={styles.normalText} value="af_heart">
+					af_heart
+				</option>
 				{/* Add more voices here */}
 			</select>
 
-			<button onClick={handleGenerate}>Generate Speech</button>
-			<button onClick={handleExit} className={styles.button}>
-				Return to Homepage
-			</button>
+			<div className={styles.buttonContainer}>
+				<button onClick={handleGenerate} className={styles.button}>
+					Generate Speech
+				</button>
+				<button onClick={handleExit} className={styles.button}>
+					Return to Homepage
+				</button>
+			</div>
 
 			{status === 'generating' && (
 				<p className={styles.status}>Generating speech...</p>

@@ -256,6 +256,120 @@ ipcMain.on('reset-overlay', () => {
 	win.setOpacity(1)
 })
 
+ipcMain.on('resize-window', (event, direction) => {
+	const win = BrowserWindow.getFocusedWindow()
+	if (!win) return
+
+	const bounds = win.getBounds()
+	const step = 50
+
+	switch (direction) {
+		case 'increase':
+			win.setBounds({
+				...bounds,
+				width: bounds.width + step,
+				height: bounds.height + step,
+			})
+			break
+		case 'decrease':
+			win.setBounds({
+				...bounds,
+				width: Math.max(300, bounds.width - step),
+				height: Math.max(100, bounds.height - step),
+			})
+			break
+		case 'taller':
+			win.setBounds({
+				...bounds,
+				height: bounds.height + step,
+			})
+			break
+		case 'shorter':
+			win.setBounds({
+				...bounds,
+				height: Math.max(100, bounds.height - step),
+			})
+			break
+		case 'wider':
+			win.setBounds({
+				...bounds,
+				width: bounds.width + step,
+			})
+			break
+		case 'thinner':
+			win.setBounds({
+				...bounds,
+				width: Math.max(300, bounds.width - step),
+			})
+			break
+	}
+})
+
+ipcMain.on('toggle-fullscreen', () => {
+	const win = BrowserWindow.getFocusedWindow()
+	if (win) {
+		win.setFullScreen(!win.isFullScreen())
+	}
+})
+
+ipcMain.on('show-info-popup', () => {
+	const parent = BrowserWindow.getFocusedWindow()
+	if (!parent) return
+
+	const { width, height } = screen.getPrimaryDisplay().workAreaSize
+
+	const popup = new BrowserWindow({
+		width: Math.floor(width * 0.5),
+		height: Math.floor(height * 0.5),
+		x: Math.floor(width * 0.25),
+		y: Math.floor(height * 0.25),
+		parent, // <-- Tie to parent
+		modal: true, // Optional: disables interaction with parent
+		resizable: false,
+		frame: false,
+		opacity: 0.9,
+		alwaysOnTop: true,
+		webPreferences: {
+			preload: path.join(__dirname, 'preload.js'),
+			contextIsolation: true,
+		},
+	})
+
+	parent.on('closed', () => {
+		if (!popup.isDestroyed()) popup.close()
+	})
+
+	popup.loadURL('http://localhost:3000/info/save-text')
+})
+
+ipcMain.on('close-window', () => {
+	const win = BrowserWindow.getFocusedWindow()
+	if (win) win.close()
+})
+
+ipcMain.on('move-window', (event, direction) => {
+	const win = BrowserWindow.getFocusedWindow()
+	if (!win) return
+
+	const bounds = win.getBounds()
+	const step = 20 // pixels to move
+
+	switch (direction) {
+		case 'left':
+			bounds.x -= step
+			break
+		case 'right':
+			bounds.x += step
+			break
+		case 'up':
+			bounds.y -= step
+			break
+		case 'down':
+			bounds.y += step
+			break
+	}
+	win.setBounds(bounds)
+
 // Handle Gemini API requests
 ipcMain.handle('ask-gemini', async (_event, input: string) => {
 	const apiKey = process.env.GEMINI_API_KEY

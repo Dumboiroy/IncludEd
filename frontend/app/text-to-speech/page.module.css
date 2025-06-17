@@ -47,22 +47,17 @@
 }
 
 .button {
-	padding: 0.75rem 1.5rem;
-	font-size: 1rem;
-	font-family: var(--font-normal);
 	background-color: var(--cyan);
 	color: var(--background);
 	border: none;
 	border-radius: var(--round-border-radius);
+	padding: 10px 30px;
 	cursor: pointer;
-	transition:
-		background-color 0.2s,
-		transform 0.1s;
+	font-size: var(--subheading-font-size);
+	font-family: var(--font-code);
 }
-
 .button:hover {
-	background-color: var(--cyan);
-	transform: translateY(-1px);
+	background-color: var(--foreground);
 }
 
 .status {
@@ -91,4 +86,19 @@
 	to {
 		opacity: 1;
 	}
+}
+
+.buttonContainer {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 10px; /* space between buttons */
+	width: fit-content;
+	margin-top: 20px;
+}
+
+.normalText {
+	font-size: var(--subheading-font-size);
+	font-family: var(--font-code);
+	text-align: center;
 }

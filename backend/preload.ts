@@ -68,6 +68,12 @@ contextBridge.exposeInMainWorld('electron', {
 	createOverlayWindow: () => ipcRenderer.send('create-overlay'),
 	makeWindowOverlay: () => ipcRenderer.send('make-window-overlay'),
 	resetOverlay: () => ipcRenderer.send('reset-overlay'),
+	resizeWindow: (direction: string) =>
+		ipcRenderer.send('resize-window', direction),
+	toggleFullscreen: () => ipcRenderer.send('toggle-fullscreen'),
+	createPopupWindow: () => ipcRenderer.send('show-info-popup'),
+	closeWindow: () => ipcRenderer.send('close-window'),
+	moveWindow: (direction: string) => ipcRenderer.send('move-window', direction),
 })
 
 contextBridge.exposeInMainWorld('GeminiAPI', {
