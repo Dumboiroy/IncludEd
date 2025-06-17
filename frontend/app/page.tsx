@@ -30,6 +30,11 @@ export default function Home() {
 						Click Here
 					</Link>
 				</div>
+				<div>
+					<Link className={styles.header} href="/text-to-speech">
+						Click Here for TTS
+					</Link>
+				</div>
 				<footer className={styles.footer}>
 					{'<'}/{'>'} with ♥
 				</footer>
