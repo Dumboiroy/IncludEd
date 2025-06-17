@@ -9,6 +9,7 @@
 	font-family: var(--font-normal);
 	min-height: 100vh;
 	gap: 1.5rem;
+	width: 100%;
 }
 
 .textarea {

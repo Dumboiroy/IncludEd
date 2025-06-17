@@ -1,12 +1,15 @@
 import path from 'node:path'
-import { app, BrowserWindow, ipcMain, globalShortcut, screen } from 'electron'
+import { app, BrowserWindow, ipcMain, screen } from 'electron'
 import { spawn } from 'node:child_process'
 import log from 'electron-log'
 import electronUpdater from 'electron-updater'
 import electronIsDev from 'electron-is-dev'
 import ElectronStore from 'electron-store'
-import { fileURLToPath, pathToFileURL } from 'url'
+import { fileURLToPath } from 'url'
 import { dirname } from 'path'
+
+import dotenv from 'dotenv'
+import { askGemini } from './api/gemini/geminiClient.js'
 import { protocol } from 'electron'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -16,6 +19,11 @@ const { autoUpdater } = electronUpdater
 let appWindow: BrowserWindow | null = null
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const store = new ElectronStore()
+
+// Load environment variables from .env file
+dotenv.config({
+	path: path.resolve(__dirname, '../.env'),
+})
 
 class AppUpdater {
 	constructor() {
@@ -361,4 +369,38 @@ ipcMain.on('move-window', (event, direction) => {
 			break
 	}
 	win.setBounds(bounds)
+
+// Handle Gemini API requests
+ipcMain.handle('ask-gemini', async (_event, input: string) => {
+	const apiKey = process.env.GEMINI_API_KEY
+	if (!apiKey) throw new Error('Gemini API key not set.')
+	return await askGemini(apiKey, input)
+})
+
+ipcMain.on('make-gemini-window-overlay', () => {
+	const win = BrowserWindow.getFocusedWindow()
+	if (!win) return
+
+	const { width: screenWidth, height: screenHeight } =
+		screen.getPrimaryDisplay().workAreaSize
+
+	win.setBounds({
+		width: Math.round(screenWidth * 0.8),
+		height: Math.round(screenHeight * 0.2),
+		x: Math.round(screenWidth * 0.1),
+		y: Math.round(screenHeight - screenHeight * 0.2 - 20),
+	})
+
+	// Configure window properties
+	win.setAlwaysOnTop(true, 'floating')
+	win.setIgnoreMouseEvents(false) // Allow interaction
+	win.setFocusable(true)
+	win.setSkipTaskbar(true)
+	win.setResizable(true)
+	win.setVisibleOnAllWorkspaces(true)
+	win.setFullScreenable(false)
+	win.setMovable(true)
+
+	// Make window transparent if not already
+	win.setOpacity(0.6) // Adjust opacity if needed
 })

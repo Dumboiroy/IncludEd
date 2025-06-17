@@ -10,9 +10,13 @@ export interface IBloopAPI {
 	onSpeechError: (callback: (error: string) => void) => void
 	removeAllSpeechListeners: () => void
 }
+export interface IGeminiAPI {
+	ask: (prompt: string) => Promise<string>
+}
 
 declare global {
 	interface Window {
 		BloopAPI: IBloopAPI
+		GeminiAPI: IGeminiAPI
 	}
 }

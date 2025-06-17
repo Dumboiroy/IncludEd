@@ -11,6 +11,8 @@ declare global {
 			createPopupWindow: () => void
 			closeWindow: () => void
 			moveWindow: (text: string) => void
+
+			makeGeminiWindowOverlay: () => void
 		}
 	}
 }
