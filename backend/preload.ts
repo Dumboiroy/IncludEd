@@ -13,4 +13,5 @@ contextBridge.exposeInMainWorld('BloopAPI', {
 contextBridge.exposeInMainWorld('electron', {
 	createOverlayWindow: () => ipcRenderer.send('create-overlay'),
 	makeWindowOverlay: () => ipcRenderer.send('make-window-overlay'),
+	resetOverlay: () => ipcRenderer.send('reset-overlay'),
 })
