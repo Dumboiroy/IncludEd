@@ -24,6 +24,11 @@ export default function Home() {
 							<text className={styles.buttonText}>Text to Speech</text>
 						</Link>
 					</div>
+					<div className={styles.button}>
+						<Link href="/llm-overlay">
+							<text className={styles.buttonText}>Task Helper</text>
+						</Link>
+					</div>
 				</div>
 				<footer className={styles.footer}>
 					<h4 className={styles.normalText}>
