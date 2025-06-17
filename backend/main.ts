@@ -7,7 +7,6 @@ import electronIsDev from 'electron-is-dev'
 import ElectronStore from 'electron-store'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
-import { tree } from 'next/dist/build/templates/app-page'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
