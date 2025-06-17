@@ -9,21 +9,27 @@ export default function Home() {
 		<div className={styles.wrapper}>
 			<main className={styles.main}>
 				<div className={styles.header}>
-					<h1 className={styles.headerText}>IncludEd</h1>
-					<h4 className={styles.headerSubText}>
-						Aiming for education to be inclusive and accessible
-					</h4>
+					<text className={styles.headerText}>IncludEd</text>
 				</div>
 
 				<div className={styles.buttonContainer}>
 					<div className={styles.button}>
-						<Link href="/speech-to-text">Speech to Text</Link>
+						<Link href="/speech-to-text">
+							<text className={styles.buttonText}>Speech to Text</text>
+						</Link>
 					</div>
-					<Link className={styles.button} href="/text-to-speech">
-						Text to Speech
-					</Link>
+					{/* CHANGE THIS WHEN IMPLEMENTED */}
+					<div className={styles.button}>
+						<Link href="/">
+							<text className={styles.buttonText}>Text to Speech</text>
+						</Link>
+					</div>
 				</div>
-				<footer className={styles.footer}></footer>
+				<footer className={styles.footer}>
+					<h4 className={styles.normalText}>
+						Inclusive and Accessible Education
+					</h4>
+				</footer>
 			</main>
 		</div>
 	)
