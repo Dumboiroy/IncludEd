@@ -63,6 +63,7 @@ export default function Page() {
 	const handleSave = () => {
 		const encoded = encodeURIComponent(finalTranscript)
 		window.electron.resetOverlay()
+		window.BloopAPI.removeAllSpeechListeners()
 		router.push(`/save-text?text=${encoded}`)
 	}
 
