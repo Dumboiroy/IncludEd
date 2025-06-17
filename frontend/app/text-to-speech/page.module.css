@@ -1,51 +1,88 @@
 /* page.module.css */
-
 .container {
-	padding: 2rem;
-	background-color: black;
-	color: white;
-	min-height: 100vh;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-normal);
+  min-height: 100vh;
+  gap: 1.5rem;
+}
+
+.textarea {
+  width: 100%;
+  max-width: 600px;
+  min-height: 100px;
+  padding: 1rem;
+  font-size: 1rem;
+  background-color: transparent;
+  border: 2px solid var(--comment);
+  border-radius: var(--round-border-radius);
+  color: var(--foreground);
+  resize: vertical;
+  transition: border-color 0.2s;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: var(--cyan);
+}
+
+.select {
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 2px solid var(--comment);
+  border-radius: var(--round-border-radius);
+  background-color: var(--background);
+  color: var(--foreground);
+  transition: border-color 0.2s;
+}
+
+.select:focus {
+  outline: none;
+  border-color: var(--cyan);
 }
 
 .button {
-	padding: 0.5rem 1.5rem;
-	background-color: #2563eb; /* Tailwind's blue-600 */
-	border-radius: 0.5rem;
-	color: white;
-	font-weight: 600;
-	cursor: pointer;
-	transition: background-color 0.2s;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  background-color: var(--green);
+  color: var(--background);
+  border: none;
+  border-radius: var(--round-border-radius);
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
 }
 
 .button:hover {
-	background-color: #1d4ed8; /* Tailwind's blue-700 */
+  background-color: var(--cyan);
+  transform: translateY(-1px);
 }
 
-.captionContainer {
-	position: relative;
-	width: 100%;
-	max-width: 768px;
-	text-align: center;
+.status {
+  font-size: 0.95rem;
+  color: var(--comment);
 }
 
-.liveCaption {
-	font-size: 1.5rem;
-	font-family: monospace;
-	color: #facc15; /* Tailwind's yellow-300 */
-	animation: fade 0.3s ease-in-out;
+.audioContainer {
+  margin-top: 1rem;
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  justify-content: center;
 }
 
-.finalTranscript {
-	margin-top: 1.5rem;
-	font-size: 1.125rem;
-	color: #d1d5db; /* Tailwind's gray-300 */
-	white-space: pre-wrap;
+.audio {
+  width: 100%;
+  max-width: 600px;
+  background-color: var(--background); /* works in some browsers */
+  border-radius: 8px;
+  outline: none;
+  border-radius: var(--round-border-radius);
 }
-
 @keyframes fade {
 	from {
 		opacity: 0;
