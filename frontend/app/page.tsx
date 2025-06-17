@@ -15,14 +15,12 @@ export default function Home() {
 					</h4>
 				</div>
 
-				<div className={styles.note}>
-					<Link className={styles.button} href="/speech-to-text">
-						Click Here
-					</Link>
-				</div>
-				<div>
-					<Link className={styles.header} href="/speech-to-text">
-						Click Here
+				<div className={styles.buttonContainer}>
+					<div className={styles.button}>
+						<Link href="/speech-to-text">Speech to Text</Link>
+					</div>
+					<Link className={styles.button} href="/text-to-speech">
+						Text to Speech
 					</Link>
 				</div>
 				<footer className={styles.footer}></footer>

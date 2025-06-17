@@ -29,10 +29,10 @@
 	text-align: center;
 }
 
-.menhera {
+/* .menhera {
 	margin: 50px 0;
 	border-radius: 50%;
-}
+} */
 
 .headerText {
 	color: var(--cyan);
@@ -82,4 +82,24 @@
 .footer {
 	margin-top: 20px;
 	color: rgba(255, 255, 255, 0.5);
+}
+
+.buttonContainer {
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+
+	width: fit-content;
+	margin-top: 20px;
+}
+
+.button {
+	background-color: var(--cyan);
+	color: var(--background);
+	border: none;
+	border-radius: var(--round-border-radius);
+	padding: 10px 20px;
+	font-size: var(--font-size);
+	cursor: pointer;
+	margin: 0 10px;
 }
