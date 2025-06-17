@@ -67,3 +67,7 @@ contextBridge.exposeInMainWorld('electron', {
 	makeWindowOverlay: () => ipcRenderer.send('make-window-overlay'),
 	resetOverlay: () => ipcRenderer.send('reset-overlay'),
 })
+
+contextBridge.exposeInMainWorld('GeminiAPI', {
+	ask: (prompt: string) => ipcRenderer.invoke('ask-gemini', prompt),
+})

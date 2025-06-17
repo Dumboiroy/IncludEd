@@ -7,7 +7,10 @@ import electronIsDev from 'electron-is-dev'
 import ElectronStore from 'electron-store'
 import { fileURLToPath, pathToFileURL } from 'url'
 import { dirname } from 'path'
-import { protocol } from 'electron';
+
+import dotenv from 'dotenv'
+import { askGemini } from './api/gemini/geminiClient.js'
+import { protocol } from 'electron'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -16,6 +19,11 @@ const { autoUpdater } = electronUpdater
 let appWindow: BrowserWindow | null = null
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const store = new ElectronStore()
+
+// Load environment variables from .env file
+dotenv.config({
+	path: path.resolve(__dirname, '../.env'),
+})
 
 class AppUpdater {
 	constructor() {
@@ -86,12 +94,12 @@ const spawnAppWindow = async () => {
 }
 
 app.on('ready', () => {
-	new AppUpdater();
+	new AppUpdater()
 
 	protocol.registerFileProtocol('local-resource', (request, callback) => {
-  	const url = request.url.replace('local-resource://', '');
-  	callback({ path: decodeURIComponent(url) });
-	});
+		const url = request.url.replace('local-resource://', '')
+		callback({ path: decodeURIComponent(url) })
+	})
 	spawnAppWindow()
 })
 
@@ -152,56 +160,55 @@ ipcMain.on('start-transcription', event => {
 	pyProc.on('close', code => {
 		console.log(`Python script exited with code ${code}`)
 	})
-
 })
 
 //glen added
 ipcMain.on('generate-speech', (event, { text, voice }) => {
-  const isWindows = process.platform === 'win32';
+	const isWindows = process.platform === 'win32'
 
-  // Path to the Python executable inside your virtualenv
-  const pythonPath = electronIsDev
-    ? path.join(
-        __dirname,
-        '../../backend/api/.venv',
-        isWindows ? 'Scripts' : 'bin',
-        isWindows ? 'python.exe' : 'python'
-      )
-    : 'python'; // Adjust for production if bundling Python
+	// Path to the Python executable inside your virtualenv
+	const pythonPath = electronIsDev
+		? path.join(
+				__dirname,
+				'../../backend/api/.venv',
+				isWindows ? 'Scripts' : 'bin',
+				isWindows ? 'python.exe' : 'python'
+			)
+		: 'python' // Adjust for production if bundling Python
 
-  // Path to your script
-  const scriptPath = electronIsDev
-    ? path.join(__dirname, '../../backend/api/text-to-speech/text-to-speech.py')
-    : path.join(process.resourcesPath, 'text-to-speech.py');
+	// Path to your script
+	const scriptPath = electronIsDev
+		? path.join(__dirname, '../../backend/api/text-to-speech/text-to-speech.py')
+		: path.join(process.resourcesPath, 'text-to-speech.py')
 
-  const pyProc = spawn(pythonPath, [scriptPath, text, voice]);
+	const pyProc = spawn(pythonPath, [scriptPath, text, voice])
 
-  pyProc.stdout.on('data', data => {
-    const lines = data.toString().split('\n').filter(Boolean);
-    for (const line of lines) {
-      try {
-        const json = JSON.parse(line);
-        if (json.audio_path) {
-  			const audioUrl = `local-resource://${json.audio_path}`;
-  			event.sender.send('speech-result', { ...json, audioUrl });
-		} else 	{
-  			event.sender.send('speech-result', json);
+	pyProc.stdout.on('data', data => {
+		const lines = data.toString().split('\n').filter(Boolean)
+		for (const line of lines) {
+			try {
+				const json = JSON.parse(line)
+				if (json.audio_path) {
+					const audioUrl = `local-resource://${json.audio_path}`
+					event.sender.send('speech-result', { ...json, audioUrl })
+				} else {
+					event.sender.send('speech-result', json)
+				}
+			} catch {
+				console.log('Non-JSON output:', line)
+			}
 		}
-      } catch {
-        console.log('Non-JSON output:', line);
-      }
-    }
-  });
+	})
 
-  pyProc.stderr.on('data', err => {
-    console.error('Python stderr:', err.toString());
-    event.sender.send('speech-error', err.toString());
-  });
+	pyProc.stderr.on('data', err => {
+		console.error('Python stderr:', err.toString())
+		event.sender.send('speech-error', err.toString())
+	})
 
-  pyProc.on('close', code => {
-    console.log(`text-to-speech.py exited with code ${code}`);
-  });
-});
+	pyProc.on('close', code => {
+		console.log(`text-to-speech.py exited with code ${code}`)
+	})
+})
 
 //damien added
 ipcMain.on('make-window-overlay', () => {
@@ -247,4 +254,11 @@ ipcMain.on('reset-overlay', () => {
 	win.setVisibleOnAllWorkspaces(true)
 	win.setMovable(true)
 	win.setOpacity(1)
+})
+
+// Handle Gemini API requests
+ipcMain.handle('ask-gemini', async (_event, input: string) => {
+	const apiKey = process.env.GEMINI_API_KEY
+	if (!apiKey) throw new Error('Gemini API key not set.')
+	return await askGemini(apiKey, input)
 })
