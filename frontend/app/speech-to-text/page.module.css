@@ -46,6 +46,27 @@
 	white-space: pre-wrap;
 }
 
+.buttonRow {
+	display: flex;
+	justify-content: center;
+	gap: 1rem;
+	margin-top: 2rem;
+}
+
+.buttonRow button {
+	background-color: #222;
+	color: white;
+	border: none;
+	padding: 0.5rem 1rem;
+	border-radius: 6px;
+	cursor: pointer;
+	transition: background 0.2s ease;
+}
+
+.buttonRow button:hover {
+	background-color: #444;
+}
+
 @keyframes fade {
 	from {
 		opacity: 0;

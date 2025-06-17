@@ -27,7 +27,7 @@ export default function Page() {
 				!data.text.toLowerCase().includes('ready for transcription')
 			) {
 				setFinalTranscript(prev => (prev + ' ' + data.text).trim())
-				await new Promise(f => setTimeout(f, 500))
+				await new Promise(f => setTimeout(f, 300))
 				setLiveCaption('') // Always clear live caption after final
 			} else if (data.partial) {
 				setLiveCaption(data.partial)
@@ -40,7 +40,6 @@ export default function Page() {
 	useEffect(() => {
 		if (reset && window.electron?.resetOverlay) {
 			window.electron.resetOverlay()
-			console.log('Reset triggered')
 			setReset(false)
 			router.replace('/')
 		}
@@ -61,6 +60,12 @@ export default function Page() {
 		}
 	}, [])
 
+	const handleSave = () => {
+		const encoded = encodeURIComponent(finalTranscript)
+		window.electron.resetOverlay()
+		router.push(`/save-text?text=${encoded}`)
+	}
+
 	return (
 		<main
 			className={styles.container}
@@ -71,6 +76,20 @@ export default function Page() {
 				{!captionMode && (
 					<p className={styles.finalTranscript}>{finalTranscript}</p>
 				)}
+			</div>
+			<div className={styles.buttonRow}>
+				<button onClick={() => setCaptionMode(false)}>Show Transcript</button>
+
+				<button
+					onClick={() => {
+						window.electron.makeWindowOverlay()
+						setCaptionMode(true)
+					}}
+				>
+					Show captions only
+				</button>
+
+				<button onClick={handleSave}>Return to Homepage</button>
 			</div>
 		</main>
 	)
