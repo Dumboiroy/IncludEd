@@ -15,6 +15,6 @@
 		"outDir": "build"
 		// "importsNotUsedAsValues": "remove"
 	},
-	"include": ["**/*.ts"],
+	"include": ["**/*.ts", "./global.d.ts"],
 	"exclude": ["node_modules"]
 }

@@ -3,8 +3,6 @@
 // through a bundler but that feels like an overkill
 const { contextBridge, ipcRenderer } = require('electron')
 
-import type { TranscriptionData } from './api/types/TranscriptionData'
-
 contextBridge.exposeInMainWorld('BloopAPI', {
 	ping: () => ipcRenderer.invoke('sample:ping'),
 	startTranscription: () => ipcRenderer.send('start-transcription'),
