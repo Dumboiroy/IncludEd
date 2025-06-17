@@ -26,9 +26,9 @@ export default function Home() {
 					Get started by editting frontend/app/page.tsx
 				</div>
 				<div>
-					<Link className={styles.header} href="/speech-to-text">
+					<a className={styles.header} href="/speech-to-text">
 						Click Here
-					</Link>
+					</a>
 				</div>
 				<footer className={styles.footer}>
 					{'<'}/{'>'} with ♥

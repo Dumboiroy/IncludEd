@@ -9,3 +9,8 @@ contextBridge.exposeInMainWorld('BloopAPI', {
 	onTranscriptionResult: (callback: (data: TranscriptionData) => void) =>
 		ipcRenderer.on('transcription-result', (_, data) => callback(data)),
 })
+
+contextBridge.exposeInMainWorld('electron', {
+	createOverlayWindow: () => ipcRenderer.send('create-overlay'),
+	makeWindowOverlay: () => ipcRenderer.send('make-window-overlay'),
+})

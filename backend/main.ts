@@ -147,3 +147,35 @@ ipcMain.on('start-transcription', event => {
 		console.log(`Python script exited with code ${code}`)
 	})
 })
+
+ipcMain.on('make-window-overlay', () => {
+	const win = BrowserWindow.getFocusedWindow()
+	if (!win) return
+
+	// Configure window properties
+	win.setAlwaysOnTop(true, 'floating')
+	win.setIgnoreMouseEvents(false) // Allow interaction
+	win.setFocusable(true)
+	win.setSkipTaskbar(true)
+	win.setResizable(true)
+	win.setVisibleOnAllWorkspaces(true)
+	win.setFullScreenable(false)
+	win.setMovable(true)
+
+	// Make window transparent if not already
+	win.setOpacity(0.6) // Adjust opacity if needed
+})
+
+ipcMain.on('reset-overlay', () => {
+	const win = BrowserWindow.getFocusedWindow()
+	if (!win) return
+
+	// Configure window properties
+	win.setAlwaysOnTop(false)
+	win.setFocusable(true)
+	win.setSkipTaskbar(true)
+	win.setResizable(true)
+	win.setVisibleOnAllWorkspaces(true)
+	win.setMovable(true)
+	win.setOpacity(1)
+})
