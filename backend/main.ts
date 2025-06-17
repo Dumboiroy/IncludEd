@@ -105,7 +105,7 @@ ipcMain.handle('sample:ping', () => {
 	return 'pong'
 })
 
-ipcMain.on('start-transcription', (event, args) => {
+ipcMain.on('start-transcription', event => {
 	// Adjust the path to your script accordingly
 	const scriptPath = path.join(
 		__dirname,
