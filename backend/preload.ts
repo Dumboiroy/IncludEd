@@ -61,3 +61,9 @@ contextBridge.exposeInMainWorld('BloopAPI', {
         return ipcRenderer.invoke('check-tts-status');
     }
 })
+
+contextBridge.exposeInMainWorld('electron', {
+	createOverlayWindow: () => ipcRenderer.send('create-overlay'),
+	makeWindowOverlay: () => ipcRenderer.send('make-window-overlay'),
+	resetOverlay: () => ipcRenderer.send('reset-overlay'),
+})
