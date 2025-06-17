@@ -17,4 +17,122 @@
 	width: 100%;
 	height: 300px;
 	gap: '1rem';
+	font-family: var(--font-code);
+	font-size: 2em;
+}
+
+.wrapper {
+	position: absolute;
+	top: 0;
+	left: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background-color: var(--background);
+}
+
+.main {
+	height: auto;
+	width: 700px;
+	margin-top: auto;
+	margin-bottom: auto;
+	padding: 0;
+	border-radius: var(--round-border-radius);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	font-family: var(--font-code);
+	color: var(--foreground);
+}
+
+.header {
+	text-align: center;
+}
+
+/* .menhera {
+	margin: 50px 0;
+	border-radius: 50%;
+} */
+
+.headerText {
+	position: relative;
+	color: var(--cyan);
+	font-size: var(--heading-font-size);
+	font-weight: bold;
+}
+
+.headerText::before {
+	position: relative;
+	content: ' ';
+	display: inline-block;
+	width: 20px;
+	height: 10px;
+	background-color: var(--cyan);
+	animation: bob 3s infinite ease-in-out;
+}
+
+@keyframes bob {
+	0% {
+		transform: translate(-20px, -45px);
+	}
+	50% {
+		transform: translate(-20px, -35px);
+	}
+	100% {
+		transform: translate(-20px, -45px);
+	}
+}
+
+.headerSubText {
+	font-size: var(--heading-font-size);
+}
+
+.normalText {
+	font-size: var(--subheading-font-size);
+	font-family: var(--font-code);
+	text-align: center;
+}
+
+.buttonText {
+	font-size: var(--subheading-font-size);
+}
+
+.note {
+	display: flex;
+	align-items: center;
+	color: var(--comment);
+
+	padding: 14px 28px;
+	border-radius: var(--round-border-radius);
+}
+
+.footer {
+	margin-top: 20px;
+	color: rgba(255, 255, 255, 0.5);
+}
+
+.buttonContainer {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 10px; /* space between buttons */
+	width: fit-content;
+	margin-top: 20px;
+}
+
+.button {
+	background-color: var(--cyan);
+	color: var(--background);
+	border: none;
+	border-radius: var(--round-border-radius);
+	padding: 10px 30px;
+	cursor: pointer;
+	font-size: var(--subheading-font-size);
+	font-family: var(--font-code);
+}
+.button:hover {
+	background-color: var(--foreground);
 }

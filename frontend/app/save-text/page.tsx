@@ -25,16 +25,25 @@ export default function SaveTextPage() {
 
 	return (
 		<main className={styles.container}>
-			<p>Would you like to save your text?</p>
+			<p className={styles.normalText}>Would you like to save your text?</p>
 			<textarea
 				value={text}
 				onChange={e => setText(e.target.value)}
 				className={styles.textbox}
 			/>
-			<div style={{ marginTop: '1rem', display: 'flex', gap: '1rem' }}>
-				<button onClick={handleReset}>Reset Text</button>
-				<button onClick={handleCopy}>Copy Text</button>
-				<button onClick={handleExit}>Exit</button>
+			<div
+				className={styles.buttonContainer}
+				style={{ marginTop: '1rem', display: 'flex', gap: '1rem' }}
+			>
+				<button className={styles.button} onClick={handleReset}>
+					Reset Text
+				</button>
+				<button className={styles.button} onClick={handleCopy}>
+					Copy Text
+				</button>
+				<button className={styles.button} onClick={handleExit}>
+					Exit
+				</button>
 			</div>
 		</main>
 	)
