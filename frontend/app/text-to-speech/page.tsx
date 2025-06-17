@@ -61,7 +61,7 @@ export default function TextToSpeechPage() {
 
       {audioPath && (
         <div className={styles.audioContainer}>
-          <audio controls autoPlay>
+          <audio controls autoPlay className={styles.audio}>
             <source src={audioPath} type="audio/wav" />
             Your browser does not support audio playbook.
           </audio>
