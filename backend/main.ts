@@ -7,7 +7,7 @@ import electronIsDev from 'electron-is-dev'
 import ElectronStore from 'electron-store'
 import { fileURLToPath, pathToFileURL } from 'url'
 import { dirname } from 'path'
-import { protocol } from 'electron';
+import { protocol } from 'electron'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -86,12 +86,12 @@ const spawnAppWindow = async () => {
 }
 
 app.on('ready', () => {
-	new AppUpdater();
+	new AppUpdater()
 
 	protocol.registerFileProtocol('local-resource', (request, callback) => {
-  	const url = request.url.replace('local-resource://', '');
-  	callback({ path: decodeURIComponent(url) });
-	});
+		const url = request.url.replace('local-resource://', '')
+		callback({ path: decodeURIComponent(url) })
+	})
 	spawnAppWindow()
 })
 
@@ -152,56 +152,55 @@ ipcMain.on('start-transcription', event => {
 	pyProc.on('close', code => {
 		console.log(`Python script exited with code ${code}`)
 	})
-
 })
 
 //glen added
 ipcMain.on('generate-speech', (event, { text, voice }) => {
-  const isWindows = process.platform === 'win32';
+	const isWindows = process.platform === 'win32'
 
-  // Path to the Python executable inside your virtualenv
-  const pythonPath = electronIsDev
-    ? path.join(
-        __dirname,
-        '../../backend/api/.venv',
-        isWindows ? 'Scripts' : 'bin',
-        isWindows ? 'python.exe' : 'python'
-      )
-    : 'python'; // Adjust for production if bundling Python
+	// Path to the Python executable inside your virtualenv
+	const pythonPath = electronIsDev
+		? path.join(
+				__dirname,
+				'../../backend/api/.venv',
+				isWindows ? 'Scripts' : 'bin',
+				isWindows ? 'python.exe' : 'python'
+			)
+		: 'python' // Adjust for production if bundling Python
 
-  // Path to your script
-  const scriptPath = electronIsDev
-    ? path.join(__dirname, '../../backend/api/text-to-speech/text-to-speech.py')
-    : path.join(process.resourcesPath, 'text-to-speech.py');
+	// Path to your script
+	const scriptPath = electronIsDev
+		? path.join(__dirname, '../../backend/api/text-to-speech/text-to-speech.py')
+		: path.join(process.resourcesPath, 'text-to-speech.py')
 
-  const pyProc = spawn(pythonPath, [scriptPath, text, voice]);
+	const pyProc = spawn(pythonPath, [scriptPath, text, voice])
 
-  pyProc.stdout.on('data', data => {
-    const lines = data.toString().split('\n').filter(Boolean);
-    for (const line of lines) {
-      try {
-        const json = JSON.parse(line);
-        if (json.audio_path) {
-  			const audioUrl = `local-resource://${json.audio_path}`;
-  			event.sender.send('speech-result', { ...json, audioUrl });
-		} else 	{
-  			event.sender.send('speech-result', json);
+	pyProc.stdout.on('data', data => {
+		const lines = data.toString().split('\n').filter(Boolean)
+		for (const line of lines) {
+			try {
+				const json = JSON.parse(line)
+				if (json.audio_path) {
+					const audioUrl = `local-resource://${json.audio_path}`
+					event.sender.send('speech-result', { ...json, audioUrl })
+				} else {
+					event.sender.send('speech-result', json)
+				}
+			} catch {
+				console.log('Non-JSON output:', line)
+			}
 		}
-      } catch {
-        console.log('Non-JSON output:', line);
-      }
-    }
-  });
+	})
 
-  pyProc.stderr.on('data', err => {
-    console.error('Python stderr:', err.toString());
-    event.sender.send('speech-error', err.toString());
-  });
+	pyProc.stderr.on('data', err => {
+		console.error('Python stderr:', err.toString())
+		event.sender.send('speech-error', err.toString())
+	})
 
-  pyProc.on('close', code => {
-    console.log(`text-to-speech.py exited with code ${code}`);
-  });
-});
+	pyProc.on('close', code => {
+		console.log(`text-to-speech.py exited with code ${code}`)
+	})
+})
 
 //damien added
 ipcMain.on('make-window-overlay', () => {
@@ -247,4 +246,119 @@ ipcMain.on('reset-overlay', () => {
 	win.setVisibleOnAllWorkspaces(true)
 	win.setMovable(true)
 	win.setOpacity(1)
+})
+
+ipcMain.on('resize-window', (event, direction) => {
+	const win = BrowserWindow.getFocusedWindow()
+	if (!win) return
+
+	const bounds = win.getBounds()
+	const step = 50
+
+	switch (direction) {
+		case 'increase':
+			win.setBounds({
+				...bounds,
+				width: bounds.width + step,
+				height: bounds.height + step,
+			})
+			break
+		case 'decrease':
+			win.setBounds({
+				...bounds,
+				width: Math.max(300, bounds.width - step),
+				height: Math.max(100, bounds.height - step),
+			})
+			break
+		case 'taller':
+			win.setBounds({
+				...bounds,
+				height: bounds.height + step,
+			})
+			break
+		case 'shorter':
+			win.setBounds({
+				...bounds,
+				height: Math.max(100, bounds.height - step),
+			})
+			break
+		case 'wider':
+			win.setBounds({
+				...bounds,
+				width: bounds.width + step,
+			})
+			break
+		case 'thinner':
+			win.setBounds({
+				...bounds,
+				width: Math.max(300, bounds.width - step),
+			})
+			break
+	}
+})
+
+ipcMain.on('toggle-fullscreen', () => {
+	const win = BrowserWindow.getFocusedWindow()
+	if (win) {
+		win.setFullScreen(!win.isFullScreen())
+	}
+})
+
+ipcMain.on('show-info-popup', () => {
+	const parent = BrowserWindow.getFocusedWindow()
+	if (!parent) return
+
+	const { width, height } = screen.getPrimaryDisplay().workAreaSize
+
+	const popup = new BrowserWindow({
+		width: Math.floor(width * 0.5),
+		height: Math.floor(height * 0.5),
+		x: Math.floor(width * 0.25),
+		y: Math.floor(height * 0.25),
+		parent, // <-- Tie to parent
+		modal: true, // Optional: disables interaction with parent
+		resizable: false,
+		frame: false,
+		opacity: 0.9,
+		alwaysOnTop: true,
+		webPreferences: {
+			preload: path.join(__dirname, 'preload.js'),
+			contextIsolation: true,
+		},
+	})
+
+	parent.on('closed', () => {
+		if (!popup.isDestroyed()) popup.close()
+	})
+
+	popup.loadURL('http://localhost:3000/info/save-text')
+})
+
+ipcMain.on('close-window', () => {
+	const win = BrowserWindow.getFocusedWindow()
+	if (win) win.close()
+})
+
+ipcMain.on('move-window', (event, direction) => {
+	const win = BrowserWindow.getFocusedWindow()
+	if (!win) return
+
+	const bounds = win.getBounds()
+	const step = 20 // pixels to move
+
+	switch (direction) {
+		case 'left':
+			bounds.x -= step
+			break
+		case 'right':
+			bounds.x += step
+			break
+		case 'up':
+			bounds.y -= step
+			break
+		case 'down':
+			bounds.y += step
+			break
+	}
+	win.setBounds(bounds)
 })
