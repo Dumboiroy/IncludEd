@@ -25,6 +25,11 @@ export default function Home() {
 						</Link>
 					</div>
 				</div>
+				<div>
+					<Link className={styles.header} href="/text-to-speech">
+						Click Here for TTS
+					</Link>
+				</div>
 				<footer className={styles.footer}>
 					<h4 className={styles.normalText}>
 						Inclusive and Accessible Education

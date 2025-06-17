@@ -5,8 +5,9 @@ import log from 'electron-log'
 import electronUpdater from 'electron-updater'
 import electronIsDev from 'electron-is-dev'
 import ElectronStore from 'electron-store'
-import { fileURLToPath } from 'url'
+import { fileURLToPath, pathToFileURL } from 'url'
 import { dirname } from 'path'
+import { protocol } from 'electron';
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -85,7 +86,12 @@ const spawnAppWindow = async () => {
 }
 
 app.on('ready', () => {
-	new AppUpdater()
+	new AppUpdater();
+
+	protocol.registerFileProtocol('local-resource', (request, callback) => {
+  	const url = request.url.replace('local-resource://', '');
+  	callback({ path: decodeURIComponent(url) });
+	});
 	spawnAppWindow()
 })
 
@@ -146,8 +152,58 @@ ipcMain.on('start-transcription', event => {
 	pyProc.on('close', code => {
 		console.log(`Python script exited with code ${code}`)
 	})
+
 })
 
+//glen added
+ipcMain.on('generate-speech', (event, { text, voice }) => {
+  const isWindows = process.platform === 'win32';
+
+  // Path to the Python executable inside your virtualenv
+  const pythonPath = electronIsDev
+    ? path.join(
+        __dirname,
+        '../../backend/api/.venv',
+        isWindows ? 'Scripts' : 'bin',
+        isWindows ? 'python.exe' : 'python'
+      )
+    : 'python'; // Adjust for production if bundling Python
+
+  // Path to your script
+  const scriptPath = electronIsDev
+    ? path.join(__dirname, '../../backend/api/text-to-speech/text-to-speech.py')
+    : path.join(process.resourcesPath, 'text-to-speech.py');
+
+  const pyProc = spawn(pythonPath, [scriptPath, text, voice]);
+
+  pyProc.stdout.on('data', data => {
+    const lines = data.toString().split('\n').filter(Boolean);
+    for (const line of lines) {
+      try {
+        const json = JSON.parse(line);
+        if (json.audio_path) {
+  			const audioUrl = `local-resource://${json.audio_path}`;
+  			event.sender.send('speech-result', { ...json, audioUrl });
+		} else 	{
+  			event.sender.send('speech-result', json);
+		}
+      } catch {
+        console.log('Non-JSON output:', line);
+      }
+    }
+  });
+
+  pyProc.stderr.on('data', err => {
+    console.error('Python stderr:', err.toString());
+    event.sender.send('speech-error', err.toString());
+  });
+
+  pyProc.on('close', code => {
+    console.log(`text-to-speech.py exited with code ${code}`);
+  });
+});
+
+//damien added
 ipcMain.on('make-window-overlay', () => {
 	const win = BrowserWindow.getFocusedWindow()
 	if (!win) return
