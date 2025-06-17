@@ -87,13 +87,6 @@ const spawnAppWindow = async () => {
 app.on('ready', () => {
 	new AppUpdater()
 	spawnAppWindow()
-
-	// Global hotkeys
-	if (appWindow) {
-		globalShortcut.register('CommandOrControl+Shift+H', () => {
-			appWindow?.webContents.send('hotkey', 'go-home')
-		})
-	}
 })
 
 app.on('window-all-closed', () => {
