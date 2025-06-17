@@ -10,8 +10,8 @@ export default function TextToSpeechPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    window.BloopAPI.onSpeechResult((data) => {
-      setAudioPath(data.audio_path);
+    window.BloopAPI.onSpeechResult((data: any) => {
+      setAudioPath(data.audioUrl);
       setStatus('done');
     });
 
@@ -62,16 +62,10 @@ export default function TextToSpeechPage() {
       {audioPath && (
         <div className={styles.audioContainer}>
           <audio controls autoPlay>
-            <source src={`file://${audioPath}`} type="audio/wav" />
+            <source src={audioPath} type="audio/wav" />
             Your browser does not support audio playbook.
           </audio>
         </div>
-      )}
-
-      {error && (
-        <p className={styles.error}>
-          ❌ Error: {error}
-        </p>
       )}
     </main>
   );

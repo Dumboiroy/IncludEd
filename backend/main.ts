@@ -5,8 +5,9 @@ import log from 'electron-log'
 import electronUpdater from 'electron-updater'
 import electronIsDev from 'electron-is-dev'
 import ElectronStore from 'electron-store'
-import { fileURLToPath } from 'url'
+import { fileURLToPath, pathToFileURL } from 'url'
 import { dirname } from 'path'
+import { protocol } from 'electron';
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -85,7 +86,12 @@ const spawnAppWindow = async () => {
 }
 
 app.on('ready', () => {
-	new AppUpdater()
+	new AppUpdater();
+
+	protocol.registerFileProtocol('local-resource', (request, callback) => {
+  	const url = request.url.replace('local-resource://', '');
+  	callback({ path: decodeURIComponent(url) });
+	});
 	spawnAppWindow()
 })
 
@@ -174,7 +180,12 @@ ipcMain.on('generate-speech', (event, { text, voice }) => {
     for (const line of lines) {
       try {
         const json = JSON.parse(line);
-        event.sender.send('speech-result', json);
+        if (json.audio_path) {
+  			const audioUrl = `local-resource://${json.audio_path}`;
+  			event.sender.send('speech-result', { ...json, audioUrl });
+		} else 	{
+  			event.sender.send('speech-result', json);
+		}
       } catch {
         console.log('Non-JSON output:', line);
       }
