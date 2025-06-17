@@ -1,5 +1,5 @@
 import path from 'node:path'
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, ipcMain, globalShortcut } from 'electron'
 import { spawn } from 'node:child_process'
 import log from 'electron-log'
 import electronUpdater from 'electron-updater'
@@ -87,6 +87,13 @@ const spawnAppWindow = async () => {
 app.on('ready', () => {
 	new AppUpdater()
 	spawnAppWindow()
+
+	// Global hotkeys
+	if (appWindow) {
+		globalShortcut.register('CommandOrControl+Shift+H', () => {
+			appWindow?.webContents.send('hotkey', 'go-home')
+		})
+	}
 })
 
 app.on('window-all-closed', () => {

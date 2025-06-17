@@ -9,30 +9,23 @@ export default function Home() {
 		<div className={styles.wrapper}>
 			<main className={styles.main}>
 				<div className={styles.header}>
-					<h1 className={styles.headerText}>NextJS + Electron Boilerplate</h1>
+					<h1 className={styles.headerText}>IncludEd</h1>
 					<h4 className={styles.headerSubText}>
-						That one boilerplate you couldn{"'"}t find, until now.
+						Aiming for education to be inclusive and accessible
 					</h4>
 				</div>
-				<Image
-					src={Menhera.src}
-					className={styles.menhera}
-					alt="menhera"
-					width={200}
-					height={200}
-				/>
+
 				<div className={styles.note}>
-					<EditSVG />
-					Get started by editting frontend/app/page.tsx
+					<Link className={styles.button} href="/speech-to-text">
+						Click Here
+					</Link>
 				</div>
 				<div>
 					<Link className={styles.header} href="/speech-to-text">
 						Click Here
 					</Link>
 				</div>
-				<footer className={styles.footer}>
-					{'<'}/{'>'} with ♥
-				</footer>
+				<footer className={styles.footer}></footer>
 			</main>
 		</div>
 	)
