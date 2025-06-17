@@ -369,6 +369,7 @@ ipcMain.on('move-window', (event, direction) => {
 			break
 	}
 	win.setBounds(bounds)
+})
 
 // Handle Gemini API requests
 ipcMain.handle('ask-gemini', async (_event, input: string) => {
