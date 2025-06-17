@@ -307,9 +307,10 @@ ipcMain.on('resize-window', (event, direction) => {
 
 ipcMain.on('toggle-fullscreen', () => {
 	const win = BrowserWindow.getFocusedWindow()
-	if (win) {
-		win.setFullScreen(!win.isFullScreen())
-	}
+	if (!win) return
+
+	const { width, height } = screen.getPrimaryDisplay().workAreaSize
+	win.setBounds({ x: 0, y: 0, width, height })
 })
 
 ipcMain.on('show-info-popup', () => {
