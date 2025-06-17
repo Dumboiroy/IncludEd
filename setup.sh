@@ -38,6 +38,8 @@ pip install -r "$REQUIREMENTS"
 deactivate
 
 # Run yarn build
+echo "🔧 Setting up Yarn dependencies..."
+yarn install
 echo "🧶 Running yarn build..."
 yarn build
 

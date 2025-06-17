@@ -1,3 +1,24 @@
+## 🚀 Demo
+
+### Setup
+
+Mac/Linux
+
+```bash
+chmod +x setup.sh
+./setup.sh
+```
+
+Windows
+
+```bash
+./windows-setup.sh
+```
+
+### Running the app
+
+yarn start
+
 ## Inspiration
 
 The project was inspired by the growing accessibility gap in digital education, where many tools still fail to accommodate diverse learning needs. Students with hearing, visual, or cognitive challenges often face barriers in real-time classroom engagement. With the increasing reliance on technology in education, we saw an urgent need for a more inclusive solution. Our project addresses this by combining live transcription, text-to-speech, and AI support into a seamless, accessible experience.
