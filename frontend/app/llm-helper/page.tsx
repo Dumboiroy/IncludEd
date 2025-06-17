@@ -12,15 +12,15 @@ export default function GeminiOverlayPage() {
 	const [loading, setLoading] = useState(false)
 
 	useEffect(() => {
-		if (window.electron?.makeWindowOverlay) {
-			window.electron.makeWindowOverlay()
+		if (window.electron?.makeGeminiWindowOverlay) {
+			window.electron.makeGeminiWindowOverlay()
 		}
-	}, [])
+	})
 	useEffect(() => {
 		if (loading) {
 			// show loading
 		}
-	}, [])
+	})
 
 	const handleAsk = async () => {
 		if (!prompt.trim()) return
