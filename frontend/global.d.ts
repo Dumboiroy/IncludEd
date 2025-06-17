@@ -6,6 +6,7 @@ declare global {
 		electron: {
 			makeWindowOverlay: () => void
 			resetOverlay: () => void
+			makeGeminiWindowOverlay: () => void
 		}
 	}
 }
