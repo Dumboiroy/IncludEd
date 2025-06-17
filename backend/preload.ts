@@ -4,6 +4,8 @@
 const { contextBridge, ipcRenderer } = require('electron')
 
 contextBridge.exposeInMainWorld('BloopAPI', {
-	foo: 'bar',
 	ping: () => ipcRenderer.invoke('sample:ping'),
+	startTranscription: () => ipcRenderer.send('start-transcription'),
+	onTranscriptionResult: (callback: (data: TranscriptionData) => void) =>
+		ipcRenderer.on('transcription-result', (_, data) => callback(data)),
 })
