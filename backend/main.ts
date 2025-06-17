@@ -1,5 +1,6 @@
 import path from 'node:path'
 import { app, BrowserWindow, ipcMain } from 'electron'
+import { spawn } from 'node:child_process'
 import log from 'electron-log'
 import electronUpdater from 'electron-updater'
 import electronIsDev from 'electron-is-dev'
@@ -9,6 +10,7 @@ import { dirname } from 'path'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
+console.log('Backend directory:', __dirname)
 const { autoUpdater } = electronUpdater
 let appWindow: BrowserWindow | null = null
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -52,6 +54,7 @@ const spawnAppWindow = async () => {
 	}
 
 	const PRELOAD_PATH = path.join(__dirname, 'preload.js')
+	console.log('Preload script path:', PRELOAD_PATH)
 
 	appWindow = new BrowserWindow({
 		width: 800,
@@ -60,6 +63,8 @@ const spawnAppWindow = async () => {
 		show: false,
 		webPreferences: {
 			preload: PRELOAD_PATH,
+			contextIsolation: true,
+			nodeIntegration: false,
 		},
 	})
 
@@ -98,4 +103,47 @@ app.on('window-all-closed', () => {
 
 ipcMain.handle('sample:ping', () => {
 	return 'pong'
+})
+
+ipcMain.on('start-transcription', event => {
+	// Adjust the path to your script accordingly
+	const scriptPath = path.join(
+		__dirname,
+		'../../backend/api/speech-to-text/speech-to-text.py'
+	)
+
+	// Build args, e.g. language model or device id, if any
+	const pyArgs = ['-m', 'en-us']
+
+	const isWindows = process.platform === 'win32'
+	const pythonPath = path.join(
+		__dirname,
+		'..',
+		'api',
+		'.venv',
+		isWindows ? 'Scripts' : 'bin',
+		isWindows ? 'python.exe' : 'python'
+	)
+
+	const pyProc = spawn(pythonPath, [scriptPath, ...pyArgs])
+
+	pyProc.stdout.on('data', data => {
+		const lines = data.toString().split('\n').filter(Boolean)
+		for (const line of lines) {
+			try {
+				const json = JSON.parse(line)
+				event.sender.send('transcription-result', json)
+			} catch (e) {
+				console.warn('Ignoring non-JSON line:', line)
+			}
+		}
+	})
+
+	pyProc.stderr.on('data', err => {
+		console.error('Python stderr:', err.toString())
+	})
+
+	pyProc.on('close', code => {
+		console.log(`Python script exited with code ${code}`)
+	})
 })
