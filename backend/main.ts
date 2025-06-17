@@ -1,5 +1,5 @@
 import path from 'node:path'
-import { app, BrowserWindow, ipcMain, globalShortcut } from 'electron'
+import { app, BrowserWindow, ipcMain, globalShortcut, screen } from 'electron'
 import { spawn } from 'node:child_process'
 import log from 'electron-log'
 import electronUpdater from 'electron-updater'
@@ -152,6 +152,16 @@ ipcMain.on('make-window-overlay', () => {
 	const win = BrowserWindow.getFocusedWindow()
 	if (!win) return
 
+	const { width: screenWidth, height: screenHeight } =
+		screen.getPrimaryDisplay().workAreaSize
+
+	win.setBounds({
+		width: Math.round(screenWidth * 0.8),
+		height: Math.round(screenHeight * 0.2),
+		x: Math.round(screenWidth * 0.1),
+		y: Math.round(screenHeight - screenHeight * 0.2 - 20),
+	})
+
 	// Configure window properties
 	win.setAlwaysOnTop(true, 'floating')
 	win.setIgnoreMouseEvents(false) // Allow interaction
@@ -169,6 +179,9 @@ ipcMain.on('make-window-overlay', () => {
 ipcMain.on('reset-overlay', () => {
 	const win = BrowserWindow.getFocusedWindow()
 	if (!win) return
+
+	const { width, height } = screen.getPrimaryDisplay().workAreaSize
+	win.setBounds({ x: 0, y: 0, width, height })
 
 	// Configure window properties
 	win.setAlwaysOnTop(false)
