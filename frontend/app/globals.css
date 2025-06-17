@@ -12,7 +12,9 @@
 	--font-code: Hack, Consolas, 'Courier New', Courier, monospace;
 	--font-normal: 'Source Sans Pro', Arial, Helvetica, sans-serif;
 	--round-border-radius: 8px;
-	--font-size: 13px;
+	--heading-font-size: 4em;
+	--subheading-font-size: 2em;
+	--font-size: 1em;
 }
 
 * {
@@ -42,6 +44,6 @@ a {
 	color: inherit;
 }
 
-a:hover {
+/* a:hover {
 	text-decoration: underline;
-}
+} */
