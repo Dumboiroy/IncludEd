@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import ReactMarkdown from 'react-markdown'
 import styles from './page.module.css'
 
 export default function GeminiOverlayPage() {
@@ -30,7 +31,11 @@ export default function GeminiOverlayPage() {
 			<button onClick={handleAsk} className={styles.button}>
 				Ask
 			</button>
-			{response && <p className={styles.finalTranscript}>{response}</p>}
+			{response && (
+				<div className={styles.finalTranscript}>
+					<ReactMarkdown>{response}</ReactMarkdown>
+				</div>
+			)}
 		</main>
 	)
 }
