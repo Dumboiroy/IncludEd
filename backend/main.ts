@@ -8,8 +8,7 @@ import ElectronStore from 'electron-store'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
 import dotenv from 'dotenv'
-import { askGemini } from './api/gemini/geminiClient'
-import { dot } from 'node:test/reporters'
+import { askGemini } from './api/gemini/geminiClient.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -18,8 +17,11 @@ const { autoUpdater } = electronUpdater
 let appWindow: BrowserWindow | null = null
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const store = new ElectronStore()
+
 // Load environment variables from .env file
-dotenv.config()
+dotenv.config({
+	path: path.resolve(__dirname, '../.env'),
+})
 
 class AppUpdater {
 	constructor() {

@@ -25,7 +25,7 @@ export default function Home() {
 						</Link>
 					</div>
 					<div className={styles.button}>
-						<Link href="/llm-overlay">
+						<Link href="/llm-helper">
 							<text className={styles.buttonText}>Task Helper</text>
 						</Link>
 					</div>

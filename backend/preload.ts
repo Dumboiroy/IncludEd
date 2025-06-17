@@ -17,5 +17,5 @@ contextBridge.exposeInMainWorld('electron', {
 })
 
 contextBridge.exposeInMainWorld('GeminiAPI', {
-	ask: (prompt: string) => ipcRenderer.invoke('gemini:ask', prompt),
+	ask: (prompt: string) => ipcRenderer.invoke('ask-gemini', prompt),
 })
