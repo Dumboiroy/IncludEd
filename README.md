@@ -15,6 +15,18 @@ Windows
 ./windows-setup.sh
 ```
 
+### 🔑 API Key for Gemini
+
+1. Go to [Get a Gemini Key in Google AI Studio](https://aistudio.google.com/app/apikey?_gl=1*1q04yez*_ga*MTcwMDY5MzEwMS4xNzUwMTU2NDg4*_ga_P1DBVKWT6V*czE3NTAyMjExNjMkbzYkZzEkdDE3NTAyMjE0NzQkajYwJGwwJGgxOTA3MDIwNzQ.) and generate an API key.
+2. In your project, create a file named `.env` inside the `/backend` folder.
+3. Paste the following line into `.env`, replacing with your actual key:
+
+   ```env
+   GEMINI_API_KEY=your-api-key-here
+   ```
+
+4. Save the file
+
 ### Running the app
 
 yarn start
