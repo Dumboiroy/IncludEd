@@ -39,7 +39,7 @@
 		"react-markdown": "^10.1.0"
 	},
 	"devDependencies": {
-		"@chromatic-com/storybook": "1",
+		"@chromatic-com/storybook": "4",
 		"@storybook/addon-essentials": "^8.1.1",
 		"@storybook/addon-interactions": "^8.1.1",
 		"@storybook/addon-links": "^8.1.1",
